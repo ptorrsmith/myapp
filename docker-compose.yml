@@ -42,6 +42,8 @@ services:
 
   redis:
     image: "redis"
+    volumes:
+      - redis_data:/data
 
   database:
     image: postgres
@@ -56,3 +58,4 @@ services:
 
 volumes:
   db_data:
+  redis_data:

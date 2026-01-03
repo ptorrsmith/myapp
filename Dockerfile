@@ -41,6 +41,8 @@ RUN apt-get update -yqq && apt-get install -yqq --no-install-recommends \
   nodejs \
   yarn
 
+RUN yarn install
+
 # avoid code file changes don't bust gem install cache by copying only the Gemfile and Gemfile.lock first
 COPY Gemfile* /usr/src/app/
 WORKDIR /usr/src/app

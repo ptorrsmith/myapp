@@ -60,3 +60,5 @@ gem 'ffi', '~> 1.15.0'
 # gem 'sqlite3', '~> 1.4.0'
 
 gem 'pg', '~> 1.0'
+
+gem 'webpacker', '~> 3.5'

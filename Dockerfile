@@ -11,11 +11,35 @@ LABEL maintainer="ptorrsmith@kindlyventures.com" \
 # RUN apt-get install -yqq --no-install-recommends nodejs
 
 # but it’s recommended to always combine the apt-get update and apt-get install commands into a single RUN instruction like so so they always use the latest package references:
-RUN apt-get update -yqq && \
-    apt-get install -yqq --no-install-recommends nodejs
+# RUN apt-get update -yqq && \
+#     apt-get install -yqq --no-install-recommends nodejs
 
 # NOTE
 # why we’re not running the commands as root with sudo. That’s because, by default, commands inside a container are run by the root user
+
+# Allow apt to work with https-based sources
+RUN apt-get update -yqq && \
+    apt-get install -yqq --no-install-recommends \
+        apt-transport-https \
+        python3 \
+        build-essential && \
+    ln -sf /usr/bin/python3 /usr/bin/python
+
+# Set Python 3 for node-gyp
+ENV PYTHON=/usr/bin/python3
+
+# Ensure we install an up-to-date version of Node (8 no longer supported)
+RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
+
+# Ensure latest packages for Yarn
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | \
+  tee /etc/apt/sources.list.d/yarn.list
+
+# Install packages
+RUN apt-get update -yqq && apt-get install -yqq --no-install-recommends \
+  nodejs \
+  yarn
 
 # avoid code file changes don't bust gem install cache by copying only the Gemfile and Gemfile.lock first
 COPY Gemfile* /usr/src/app/

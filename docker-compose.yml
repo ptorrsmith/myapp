@@ -19,6 +19,26 @@ services:
     env_file:
       - .env/development/database
       - .env/development/web
+    environment:
+      - WEBPACKER_DEV_SERVER_HOST=webpack_dev_server
+
+  webpack_dev_server:
+    # also build from the same Dockerfile as web
+    build: .
+    # override the default command to run the webpack-dev-server
+    command: ./bin/webpack-dev-server
+    ports:
+      - "3035:3035"
+    # and share the same volume as web
+    volumes:
+      - .:/usr/src/app
+    env_file:
+      - .env/development/web
+      - .env/development/database
+    environment:
+      - WEBPACKER_DEV_SERVER_HOST=0.0.0.0
+    # depends_on:
+    #   - web
 
   redis:
     image: "redis"

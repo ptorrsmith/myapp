@@ -33,3 +33,8 @@
 # Ignore dotenv environment variable files.
 /.env/*
 .env
+/public/packs
+/public/packs-test
+/node_modules
+yarn-debug.log*
+.yarn-integrity

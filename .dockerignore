@@ -9,5 +9,15 @@ log/*
 tmp/*
 
 # Editor temp files
-*.swp
-*.swo
+# Vim
+# *.swp
+# *.swo
+
+# MacOS
+.DS_Store
+
+# VSCode
+.vscode/
+
+# Cursor
+.cursor/

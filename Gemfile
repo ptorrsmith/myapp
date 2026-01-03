@@ -55,5 +55,8 @@ gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 
 # Pin ffi to version compatible with Ruby 2.6
 gem 'ffi', '~> 1.15.0'
+
 # Pin sqlite3 to version compatible with Ruby 2.6
-gem 'sqlite3', '~> 1.4.0'
+# gem 'sqlite3', '~> 1.4.0'
+
+gem 'pg', '~> 1.0'

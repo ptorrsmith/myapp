@@ -21,3 +21,8 @@ tmp/*
 
 # Cursor
 .cursor/
+
+
+# Ignore dotenv environment variable files.
+/.env/*
+.env

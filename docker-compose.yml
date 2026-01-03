@@ -14,3 +14,10 @@ services:
 
   redis:
     image: "redis"
+
+  database:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres # default value
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: myapp_development

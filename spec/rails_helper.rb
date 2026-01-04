@@ -1,9 +1,20 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 require 'spec_helper'
 ENV['RAILS_ENV'] ||= 'test'
-require File.expand_path('../config/environment', __dir__)
+
+# Suppress warnings about net-protocol constants already being initialized
+# This happens because Ruby 2.6 includes net/protocol in stdlib, but the
+# net-protocol gem (dependency of mail) also defines these constants
+# These warnings are harmless and can be safely ignored
+original_verbose = $VERBOSE
+$VERBOSE = nil
+begin
+  require File.expand_path('../config/environment', __dir__)
+ensure
+  $VERBOSE = original_verbose
+end
 # Prevent database truncation if the environment is production
-abort("The Rails environment is running in production mode!") if Rails.env.production?
+abort('The Rails environment is running in production mode!') if Rails.env.production?
 require 'rspec/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
 

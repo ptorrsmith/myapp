@@ -13,6 +13,41 @@
 # it.
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
+
+# Suppress warnings about net-protocol constants already being initialized
+# This happens because Ruby 2.6 includes net/protocol in stdlib, but the
+# net-protocol gem (dependency of mail) also defines these constants
+# These warnings are harmless and can be safely ignored
+require 'stringio'
+
+class WarningFilter
+  def initialize(original_stderr)
+    @original_stderr = original_stderr
+  end
+
+  def write(string)
+    # Filter out net-protocol related warnings
+    # Matches warnings like:
+    # - "/usr/local/lib/ruby/2.6.0/net/protocol.rb:66: warning: previous definition..."
+    # - "already initialized constant Net::ProtocRetryError"
+    return 0 if string.include?('net/protocol.rb') && string.include?('warning')
+    return 0 if string.match?(/(already initialized constant|previous definition of).*Net::/)
+    @original_stderr.write(string)
+  end
+
+  def method_missing(method, *args, &block)
+    @original_stderr.send(method, *args, &block)
+  end
+
+  def respond_to_missing?(method, include_private = false)
+    @original_stderr.respond_to?(method, include_private)
+  end
+end
+
+# Replace stderr with our filter that will capture and filter warnings
+$original_stderr = $stderr
+$stderr = WarningFilter.new($original_stderr)
+
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest

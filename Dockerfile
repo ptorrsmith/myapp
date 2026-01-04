@@ -41,11 +41,16 @@ RUN apt-get update -yqq && apt-get install -yqq --no-install-recommends \
   nodejs \
   yarn
 
+# Set working directory
+WORKDIR /usr/src/app
+
+# May need to add this back in, not sure yet? Was AI added.
+# Copy package files first to cache yarn install layer
+# COPY package.json yarn.lock* /usr/src/app/
 RUN yarn install
 
-# avoid code file changes don't bust gem install cache by copying only the Gemfile and Gemfile.lock first
+# Copy Gemfile files to cache bundle install layer
 COPY Gemfile* /usr/src/app/
-WORKDIR /usr/src/app
 RUN bundle install
 
 # now we can avoid re-installing gems unless Gemfile or Gemfile.lock changes, saving build time.

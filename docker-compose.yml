@@ -9,6 +9,7 @@ services:
     build: .
     ports:
       - "3000:3000"
+      - "4000:4000"  # for Capybara tests
     volumes:
       - .:/usr/src/app
     # environment:
@@ -55,6 +56,25 @@ services:
       - .env/development/database
     volumes:
       - db_data:/var/lib/postgresql
+
+  selenium_chrome:
+    image: selenium/standalone-chrome-debug:3.141.59-20210929
+    platform: linux/amd64  # Required for Apple Silicon (ARM64) compatibility
+    ports:
+      - "5901:5900" # VNC access for debugging (changed from 5900 to avoid conflict)
+      - "4444:4444" # Selenium Grid port
+    environment:
+      - SE_NODE_MAX_SESSIONS=1
+      - SE_NODE_SESSION_TIMEOUT=300
+      - SE_SCREEN_WIDTH=1920
+      - SE_SCREEN_HEIGHT=1080
+      - SE_VNC_NO_PASSWORD=1
+    shm_size: 2gb  # Increase shared memory for Chrome
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4444/wd/hub/status"]
+      interval: 5s
+      timeout: 3s
+      retries: 5  
 
 volumes:
   db_data:

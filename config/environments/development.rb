@@ -1,6 +1,19 @@
 Rails.application.configure do
   # Verifies that versions and hashed value of the package contents in the project's package.json
   config.webpacker.check_yarn_integrity = true
+  
+  # Allow web console from Docker network IPs
+  # Docker default bridge: 172.17.0.0/16, custom networks: 172.18.0.0/16-172.30.0.0/16
+  # Also allow private IP ranges: 10.0.0.0/8, 192.168.0.0/16
+  config.web_console.whitelisted_ips = [
+    '127.0.0.1',
+    '::1',
+    '127.0.0.0/8',          # Localhost range (127.0.0.0 - 127.255.255.255)
+    '10.0.0.0/8',           # Private IP range
+    '172.16.0.0/12',        # Docker networks (172.16.0.0 - 172.31.255.255)
+    '192.168.0.0/16'        # Private IP range
+  ]
+  
   # Settings specified here will take precedence over those in config/application.rb.
 
   # In the development environment your application's code is reloaded on

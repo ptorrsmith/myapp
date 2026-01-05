@@ -11,8 +11,13 @@
 set -e
 
 # Install JS dependencies if needed
-if [ -f yarn.lock ]; then
-  yarn install --check-files
+# I think this is being done in the Dockerfile already
+# if [ -f yarn.lock ]; then
+#   yarn install --check-files
+# fi
+
+if [ -f tmp/pids/server.pid ]; then
+  rm tmp/pids/server.pid
 fi
 
 # Start Rails server (default CMD)

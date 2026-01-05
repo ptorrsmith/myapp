@@ -83,7 +83,8 @@ COPY . /usr/src/app
 # RUN chmod +x /usr/src/app/entrypoint.sh
 
 # Use entrypoint to run yarn install before starting Rails
-# ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
+# ENTRYPOINT ["/usr/src/app/entrypoint.sh"] 
+ENTRYPOINT ["./entrypoint.sh"] 
 
 # set default command to run when starting the container. Can be overridden
 # This uses the 'exec' form (an array: treats all elements in single command => PID 1) so that it 
@@ -91,4 +92,5 @@ COPY . /usr/src/app
 # This ensures our server can accept requests from any IP address (not just localhost)
 #  and in fact, we are overriding this command in docker-compose.yml to run migrations first
 
+# Note: This default command is being overridden in docker-compose.yml to run migrations first
 CMD ["bin/rails", "s", "-b", "0.0.0.0"]

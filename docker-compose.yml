@@ -22,6 +22,8 @@ services:
       - .env/development/web
     environment:
       - WEBPACKER_DEV_SERVER_HOST=webpack_dev_server
+    # run migrations before starting the server. This overrides the CMD in the Dockerfile.
+    command: bash -c "bin/rails db:migrate && bin/rails s -b 0.0.0.0"
 
   webpack_dev_server:
     # also build from the same Dockerfile as web

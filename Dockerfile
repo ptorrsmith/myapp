@@ -46,7 +46,7 @@ WORKDIR /usr/src/app
 
 # May need to add this back in, not sure yet? Was AI added.
 # Copy package files first to cache yarn install layer
-# COPY package.json yarn.lock* /usr/src/app/
+COPY package.json yarn.lock* /usr/src/app/
 RUN yarn install
 
 # Copy Gemfile files to cache bundle install layer

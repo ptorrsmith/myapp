@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# optional to use an entrypoint script
+# but not currently used in this setup
+# and ENTRYPOINT is commented out in Dockerfile
+# as keeping it simple for now
+# to re-enable this approach,
+# uncomment the relevant lines in Dockerfile
+# and rename this file to entrypoint.sh
+
+set -e
+
+# Install JS dependencies if needed
+if [ -f yarn.lock ]; then
+  yarn install --check-files
+fi
+
+# Start Rails server (default CMD)
+exec "$@"

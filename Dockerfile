@@ -63,7 +63,16 @@ COPY . /usr/src/app
 # install gems listed in Gemfile so they are part of the image - also now no longer needed as using cached layer
 # RUN bundle install
 
-# set default commend to run when starting the container. Can be overridden
+# Copy entrypoint script
+# COPY entrypoint.sh /usr/src/app/entrypoint.sh
+# RUN chmod +x /usr/src/app/entrypoint.sh
+
+# Use entrypoint to run yarn install before starting Rails
+# ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
+
+# set default command to run when starting the container. Can be overridden
 # This uses the 'exec' form (an array: treats all elements in single command => PID 1) so that it doesn't invoke a shell, allowing signals to be properly received by the Rails process
 # This ensures our server can accept requests from any IP address (not just localhost)
+# and in fact, we are overriding this command in docker-compose.yml to run migrations first
+
 CMD ["bin/rails", "s", "-b", "0.0.0.0"]

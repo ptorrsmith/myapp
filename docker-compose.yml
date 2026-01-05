@@ -12,6 +12,7 @@ services:
       - "4000:4000"  # for Capybara tests
     volumes:
       - .:/usr/src/app
+      - gem_cache:/gems # so we can use a named volume for the gems cache
     # environment:
     #   DATABASE_HOST: database
     #   POSTGRES_USER: postgres
@@ -35,6 +36,7 @@ services:
     # and share the same volume as web
     volumes:
       - .:/usr/src/app
+      - gem_cache:/gems # so we can use the same named volume for the gems cache as web
     env_file:
       - .env/development/web
       - .env/development/database
@@ -81,3 +83,4 @@ services:
 volumes:
   db_data:
   redis_data:
+  gem_cache:

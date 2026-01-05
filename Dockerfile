@@ -47,10 +47,25 @@ WORKDIR /usr/src/app
 # May need to add this back in, not sure yet? Was AI added.
 # Copy package files first to cache yarn install layer
 COPY package.json yarn.lock* /usr/src/app/
+# WORKDIR /usr/src/app
 RUN yarn install
 
 # Copy Gemfile files to cache bundle install layer
 COPY Gemfile* /usr/src/app/
+# WORKDIR /usr/src/app
+
+# so we can use a named volume for the gems cache
+ENV BUNDLE_PATH /gems
+# could alternatively put this in the docker-compose.yml file
+# environment:
+#   - BUNDLE_PATH=/gems
+# but better here as webpack_dev_serve uses the same volume/build steps as web
+
+# Alternative way to try use cache for bundle install step, but not working yet.
+# The --mount flag tells Docker to use a persistent cache just for this step
+# RUN --mount=type=cache,target=/gems/gems \
+#     bundle install
+
 RUN bundle install
 
 # now we can avoid re-installing gems unless Gemfile or Gemfile.lock changes, saving build time.
@@ -71,8 +86,9 @@ COPY . /usr/src/app
 # ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
 
 # set default command to run when starting the container. Can be overridden
-# This uses the 'exec' form (an array: treats all elements in single command => PID 1) so that it doesn't invoke a shell, allowing signals to be properly received by the Rails process
+# This uses the 'exec' form (an array: treats all elements in single command => PID 1) so that it 
+#  doesn't invoke a shell, allowing signals to be properly received by the Rails process
 # This ensures our server can accept requests from any IP address (not just localhost)
-# and in fact, we are overriding this command in docker-compose.yml to run migrations first
+#  and in fact, we are overriding this command in docker-compose.yml to run migrations first
 
 CMD ["bin/rails", "s", "-b", "0.0.0.0"]
